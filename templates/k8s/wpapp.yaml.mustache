@@ -13,8 +13,7 @@ data:
         
         # Set nginx to serve files from the shared volume!
         root /var/www/html;
-        # @TODO: dynamiser
-        server_name toto.s.afkt.softwaregardeners.fr;
+        server_name {{{domainName}}};
         index index.php;
         location = /favicon.ico {
                 log_not_found off;
@@ -80,7 +79,7 @@ spec:
             name: nginx-config
         - name: aurora-db-secret
           secret:
-            secretName: db-user-pass # dynamiser
+            secretName: db-user-pass
       containers:
         - image: nginx:1.17.10-alpine
           imagePullPolicy: Always

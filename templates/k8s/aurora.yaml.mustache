@@ -5,7 +5,7 @@ metadata:
     app: mysql-service
   name: mysql-service
 spec:
-  externalName: aurora-rds-mysql.cluster-cg9hin1iso42.eu-central-1.rds.amazonaws.com # TODO: dynamiser
+  externalName: {{{auroraEndpoint}}}
   selector:
     app: mysql-service
   type: ExternalName
