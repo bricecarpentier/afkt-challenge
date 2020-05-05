@@ -6,6 +6,14 @@
 npx @softwaregardeners/aha deploy a.superb.domainname.tld --dbPassword=<a secure db password>
 ```
 
+```bash
+npx @softwaregardeners/aha destroy
+```
+
+```bash
+npx @softwaregardeners author
+```
+
 `aha` signifie "an hour ago"
 
 ## Requirements:
