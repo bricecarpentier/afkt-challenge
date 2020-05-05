@@ -1,7 +1,7 @@
 import { homedir } from "os";
 import { join } from "path";
 import { ensureDir } from "fs-extra";
-import { Context } from "./types";
+import { Context } from "../deploy/types";
 
 export const title = "Ensure working directory exists";
 

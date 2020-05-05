@@ -5,7 +5,7 @@ import * as provisionVpc from "./terraform-vpc";
 import * as provisionEks from "./terraform-eks";
 import * as provisionRds from "./terraform-rds";
 
-export const title = "Terraform";
+export const title = "Terraforming";
 
 export const task = () =>
   new Listr([

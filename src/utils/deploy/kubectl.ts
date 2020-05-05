@@ -7,7 +7,7 @@ import * as kubectlExposePods from "./kubectl-expose-pods";
 import * as kubectlApply from "./kubectl-apply";
 import * as kubectlDeleteDbSecret from "./kubectl-delete-secrets";
 
-export const title = "Kubectl";
+export const title = "Kubectling";
 
 export const task = () =>
   new Listr([

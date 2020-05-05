@@ -28,4 +28,7 @@ export type Context = {
     zoneName: string;
     certArn?: string;
   };
+  postProcess?: {
+    loadBalancerCname: string;
+  };
 };

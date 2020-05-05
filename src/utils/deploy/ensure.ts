@@ -1,7 +1,7 @@
 import * as Listr from "listr";
+import * as ensureWorkDir from "../common/ensure-work-dir";
 import * as ensureRequiredCommands from "./ensure-required-commands";
 import * as ensureRegion from "./ensure-region";
-import * as ensureWorkDir from "./ensure-work-dir";
 import * as ensureHostedZone from "./ensure-hosted-zone";
 import * as ensureDbPassword from "./ensure-db-password";
 

@@ -3,7 +3,7 @@ import * as Listr from "listr";
 import * as deployTasks from "../utils/deploy/";
 
 export default class Deploy extends Command {
-  static description = "describe the command here";
+  static description = "Deploy infrastructure";
 
   static examples = [
     `$ aha deploy
@@ -35,12 +35,12 @@ export default class Deploy extends Command {
       deployTasks.ensure,
       deployTasks.terraform,
       deployTasks.kubectl,
+      deployTasks.postProcess,
     ]);
     const ctx = { cmd: this, args, flags };
     try {
       await tasks.run(ctx);
     } catch (error) {
-      this.log(JSON.stringify(ctx));
       this.exit(1);
     }
 
