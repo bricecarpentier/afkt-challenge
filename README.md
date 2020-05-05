@@ -45,3 +45,32 @@ Cette application a sensiblement le flow suivant:
 - Le mot de passe pourrait être récupéré via un prompt s'il n'est pas passé en paramètre
 - Il n'y a pas de réel intérêt à faire plusieurs modules terraform différents et cela ralentit assez considérablement l'installation. J'ai initialement opté pour cette solution car j'avais des problèmes d'inter-dépendances dans mes toutes premières versions qui rendaient très compliqué le fait de detruire l'infrastructure. Il aurait sans doute été préférable de passer par des `depends_on`
 - Il serait relativement trivial de plugger soit GithubActions soit CircleCI pour publier automatiquement les nouvelles version à chaque push sur master. Cela étant dit, je n'aime pas particulièrement mettre en place de CD avant d'avoir une CI propre, et donc faire ce publish automatique avant d'avoir une couverture de test décente me parait prématuré.
+
+## Questions:
+
+> How much did you spend on this test?
+
+Way more than I should have!
+On a more serious note, I spent about two full days:
+
+- roughly one day to get the terraform&kubectl process right
+- roughly one day getting the cli in a state that I'm happy with
+
+The pieces that took me the longest are:
+
+- getting RDS and the EKS worker nodes to communicate (about 2h): I ended up putting both in the same vpc which is somewhat subpar
+- a weird wordpress bug that I still haven't fixed and that prevents wordpress' styles from displaying correctly on Chrome (about 2h). It works fine virtually everywhere else though, including on mobile. I'm by no means a wordpress express and after triple checking my nginx configuration I haven't really faulted it
+- waiting for resources to get created and destroyed (4 hours, if not more): as I really wanted the solution to be out of the box I needed to make sure that I could get to the same state by running only one command. It takes about 20 minutes to destroy RDS + EKS + VPC and about as much to recreate them. I did this process more times that I'd like to admit.
+
+> Why did you choose this language?
+
+I chose terraform because it's probably the most famous IAC solution and the two last companies I worked with were using it so I had already been introduced.
+I'm very efficient with JS and am getting to know TS more, so I'd thought it would be fun to code the cli with TS.
+
+> Why did you choose this cloud?
+
+I chose AWS because to be honest it's the one I'm the most familiar with. I have used Firebase so I got some little exposure to GKE, but not that much.
+
+> Please introduce yourself using a valid and executable script (_free language_)?
+
+I suggest you run `npx @softwaregardeners/aha author` :-)
