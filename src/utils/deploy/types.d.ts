@@ -21,7 +21,6 @@ export type Context = {
     databaseUsername: string;
     databaseName: string;
     databasePort: string;
-    k8sConfig: string;
   };
   cert?: {
     hostedZoneId: string;
