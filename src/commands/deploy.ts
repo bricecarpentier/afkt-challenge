@@ -32,12 +32,8 @@ export default class Deploy extends Command {
   async run() {
     const { args, flags } = this.parse(Deploy);
     const tasks = new Listr([
-      deployTasks.ensureRequiredCommands,
-      deployTasks.ensureRegion,
-      deployTasks.ensureWorkDir,
-      deployTasks.ensureHostedZone,
-      deployTasks.ensureDbPassword,
-      deployTasks.terraformRound1,
+      deployTasks.ensure,
+      deployTasks.terraform,
       deployTasks.kubectl,
     ]);
     const ctx = { cmd: this, args, flags };
