@@ -35,3 +35,5 @@ Cette application a sensiblement le flow suivant:
 
 - Il aurait été encore plus sexy de générer un nom de domaine automatique à la manière de `now.sh`. Ce ne serait d'ailleurs pas nécessairement beaucoup plus compliqué mais un petit peu hors-scope
 - Le mot de passe pourrait être récupéré via un prompt s'il n'est pas passé en paramètre
+- Il n'y a pas de réel intérêt à faire plusieurs modules terraform différents et cela ralentit assez considérablement l'installation. J'ai initialement opté pour cette solution car j'avais des problèmes d'inter-dépendances dans mes toutes premières versions qui rendaient très compliqué le fait de detruire l'infrastructure. Il aurait sans doute été préférable de passer par des `depends_on`
+- Il serait relativement trivial de plugger soit GithubActions soit CircleCI pour publier automatiquement les nouvelles version à chaque push sur master. Cela étant dit, je n'aime pas particulièrement mettre en place de CD avant d'avoir une CI propre, et donc faire ce publish automatique avant d'avoir une couverture de test décente me parait prématuré.
