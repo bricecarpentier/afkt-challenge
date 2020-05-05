@@ -1,10 +1,10 @@
 # Ce module provisionne notre cluster EKS
 module "eks" {
   source       = "terraform-aws-modules/eks/aws"
-  cluster_name = local.cluster_name
-  subnets      = module.vpc.private_subnets # nos worker nodes sont dans un subnet privé
+  cluster_name = var.cluster_name
+  subnets      = var.private_subnets # nos worker nodes sont dans un subnet privé
 
-  vpc_id = module.vpc.vpc_id
+  vpc_id = var.vpc_id
 
   worker_groups = [
     {
