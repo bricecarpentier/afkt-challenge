@@ -14,8 +14,9 @@ module "db" {
     "10.0.0.0/16",
     "10.0.0.0/8", # correspond au block des worker nodes du cluster EKS
   ]
+  # les deux options suivantes pourraient (devraient) bien entendu être acceptées en variable d'un côté et en output de l'autre
   database_name       = "wordpressdb"
   username            = "dbadmin"
-  password            = "totototototo"
-  skip_final_snapshot = "true"
+  password            = var.database_password
+  skip_final_snapshot = "true" # pas acceptable en prod, mais dans le cadre de cet exercice j'ai été amené à provisionner et détruire les resources un certain nombre de fois :-)
 }

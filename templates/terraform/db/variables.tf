@@ -5,7 +5,7 @@ variable "vpc_id" {
 
 variable "private_subnets" {
   description = "ids of the subnets we want to include this rds cluster in"
-  type = string
+  type = list
 }
 
 variable "database_password" {
@@ -15,5 +15,5 @@ variable "database_password" {
 
 variable "sg_id" {
   description = "id of the security group to allow"
-  type = "stringh"
+  type = string
 }
