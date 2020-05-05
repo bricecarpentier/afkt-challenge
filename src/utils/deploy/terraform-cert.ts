@@ -38,8 +38,8 @@ const prepareTfVars = async (ctx: Context) => {
   const { cert } = ctx;
   await writeJSON(varFile, {
     hosted_zone_id: cert?.hostedZoneId,
-    domain_name: cert?.domainName,
-    alternative_names: [`*.${cert?.domainName}`],
+    domain_name: cert?.zoneName,
+    alternative_names: [`*.${cert?.zoneName}`],
   });
 };
 

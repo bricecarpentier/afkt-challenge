@@ -11,7 +11,7 @@ npx @softwaregardeners/aha deploy a.superb.domainname.tld --dbPassword=<a secure
 ## Requirements:
 
 - les commandes `aws` (package `aws-cli`), `terraform` et `kubectl`, et bien évidemment `npx`
-- Une hosted zone route53 pour le domaine choisi (requis pour la génération du certificat ssl). Cette zone doit être la bonne (= que des enregistrements NS pointent dessus). Voir limitations
+- Une hosted zone route53 pour le domaine choisi (requis pour la génération du certificat ssl). Cette zone doit être la bonne (= que des enregistrements NS pointent dessus). Voir limitations. **Attention: pour le domaine `a.superb.domainname.tld`, la zone considérée est `suberb.domainname.tld`**
 
 ## Abstract
 

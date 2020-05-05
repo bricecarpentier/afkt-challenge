@@ -25,6 +25,7 @@ export type Context = {
   cert?: {
     hostedZoneId: string;
     domainName: string;
-    certArn: string;
+    zoneName: string;
+    certArn?: string;
   };
 };

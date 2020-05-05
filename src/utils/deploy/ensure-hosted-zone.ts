@@ -17,11 +17,12 @@ const equal = (s1: string[], s2: string[]) => {
 
 export const task = async (ctx: Context) => {
   const domainName = ctx.args.domainName;
+  const zoneName = domainName.slice(domainName.indexOf(".") + 1);
   const env = filterEnv(process.env);
   const stdout = (await execp("aws route53 list-hosted-zones", { env })).stdout;
   const output = JSON.parse(stdout);
   const zoneId = output.HostedZones.find(
-    (zone: any) => zone.Name.replace(/\.$/, "") === domainName
+    (zone: any) => zone.Name.replace(/\.$/, "") === zoneName
   )?.Id;
   if (zoneId === undefined)
     throw new Error("we could not find a zone matching your domain on route53");
@@ -37,7 +38,7 @@ export const task = async (ctx: Context) => {
     throw new Error(
       `we could not fetch the nameservers from the hosted zone (${zoneId})`
     );
-  const addresses = await resolveNsp(domainName);
+  const addresses = await resolveNsp(zoneName);
 
   if (!equal(nameservers, addresses))
     throw new Error(
@@ -47,5 +48,6 @@ export const task = async (ctx: Context) => {
   ctx.cert = {
     hostedZoneId: zoneId,
     domainName,
+    zoneName,
   };
 };
