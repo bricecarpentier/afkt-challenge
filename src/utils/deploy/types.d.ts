@@ -6,6 +6,7 @@ export type Context = {
   flags: any;
   configDir?: string;
   terraformDir?: string;
+  k8sDir?: string;
   vpc?: {
     vpcId: string;
     privateSubnets: string[];
@@ -20,5 +21,11 @@ export type Context = {
     databaseUsername: string;
     databaseName: string;
     databasePort: string;
+    k8sConfig: string;
+  };
+  cert?: {
+    hostedZoneId: string;
+    domainName: string;
+    certArn: string;
   };
 };

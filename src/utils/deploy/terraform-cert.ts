@@ -9,65 +9,60 @@ import { writeJSON } from "fs-extra";
 
 const execp = promisify(exec);
 
-export const title = "Provision RDS";
+export const title = "Provision Certificate";
 
 const extract = (ctx: Context) => {
   const { terraformDir } = ctx;
   if (terraformDir === undefined)
     throw new Error("terraform dir not available");
-  const terraformRdsDir = join(terraformDir, "db");
-  if (terraformRdsDir === undefined)
-    throw new Error("terraform/db dir not available ");
+  const terraformCertDir = join(terraformDir, "cert");
+  if (terraformCertDir === undefined)
+    throw new Error("terraform/cert dir not available ");
   const region = ctx.flags.region as string;
 
-  return { terraformRdsDir, region };
+  return { terraformCertDir: terraformCertDir, region };
 };
 
 const terraformInit = async (ctx: Context) => {
-  const { terraformRdsDir, region } = extract(ctx);
+  const { terraformCertDir, region } = extract(ctx);
 
   await execp("terraform init", {
-    cwd: terraformRdsDir,
+    cwd: terraformCertDir,
     env: filterEnv({ ...process.env, AWS_REGION: region }),
   });
 };
 
 const prepareTfVars = async (ctx: Context) => {
-  const { terraformRdsDir } = extract(ctx);
-  const varFile = join(terraformRdsDir, "terraform.tfvars.json");
-  const { vpc, eks } = ctx;
+  const { terraformCertDir } = extract(ctx);
+  const varFile = join(terraformCertDir, "terraform.tfvars.json");
+  const { cert } = ctx;
   await writeJSON(varFile, {
-    private_subnets: vpc?.privateSubnets,
-    vpc_id: vpc?.vpcId,
-    sg_id: eks?.sgId,
+    hosted_zone_id: cert?.hostedZoneId,
+    domain_name: cert?.domainName,
+    alternative_names: [`*.${cert?.domainName}`],
   });
 };
 
 const terraformApply = async (ctx: Context) => {
-  const { terraformRdsDir, region } = extract(ctx);
-  const dbPassword = ctx.rds?.databasePassword;
+  const { terraformCertDir, region } = extract(ctx);
+
   await execp("terraform apply -auto-approve", {
-    cwd: terraformRdsDir,
-    env: {
-      ...filterEnv({ ...process.env, AWS_REGION: region }),
-      TF_VAR_database_password: dbPassword,
-    },
+    cwd: terraformCertDir,
+    env: filterEnv({ ...process.env, AWS_REGION: region }),
   });
 };
 
 const terraformOutput = async (ctx: Context) => {
-  const { terraformRdsDir } = extract(ctx);
+  const { terraformCertDir } = extract(ctx);
   const { stdout } = await execp("terraform output -json", {
-    cwd: terraformRdsDir,
+    cwd: terraformCertDir,
     env: filterEnv(process.env),
   });
   const output = JSON.parse(stdout);
-  ctx.rds = {
-    databasePassword: ctx.rds?.databasePassword ?? "",
-    databaseEndpoint: output.db_endpoint.value,
-    databaseUsername: output.db_username.value,
-    databaseName: output.db_name.value,
-    databasePort: output.db_port.value,
+  // @ts-ignore
+  ctx.cert = {
+    ...(ctx.cert || {}),
+    certArn: output.cert_arn.value,
   };
 };
 

@@ -17,7 +17,8 @@ export default class Deploy extends Command {
     // flag with no value (-f, --force)
     // force: flags.boolean({ char: "f" }),
     region: flags.string({
-      description: "aws region to use",
+      description:
+        "aws region to use. Defaults to AWS_REGION or DEFAULT_AWS_REGION",
       default: process.env.AWS_REGION ?? process.env.DEFAULT_AWS_REGION,
     }),
     dbPassword: flags.string({
@@ -26,7 +27,7 @@ export default class Deploy extends Command {
     }),
   };
 
-  static args = [{ name: "file" }];
+  static args = [{ name: "domainName" }];
 
   async run() {
     const { args, flags } = this.parse(Deploy);
@@ -34,13 +35,16 @@ export default class Deploy extends Command {
       deployTasks.ensureRequiredCommands,
       deployTasks.ensureRegion,
       deployTasks.ensureWorkDir,
+      deployTasks.ensureHostedZone,
       deployTasks.ensureDbPassword,
       deployTasks.terraformRound1,
+      deployTasks.kubectl,
     ]);
     const ctx = { cmd: this, args, flags };
     try {
       await tasks.run(ctx);
     } catch (error) {
+      this.log(JSON.stringify(ctx));
       this.exit(1);
     }
 
