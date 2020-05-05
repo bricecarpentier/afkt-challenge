@@ -3,10 +3,15 @@
 ## TL;DR
 
 ```bash
-npx @softwaregardeners/aha
+npx @softwaregardeners/aha deploy a.superb.domainname.tld --dbPassword=<a secure db password>
 ```
 
 `aha` signifie "an hour ago"
+
+## Requirements:
+
+- les commandes `aws` (package `aws-cli`), `terraform` et `kubectl`, et bien évidemment `npx`
+- Une hosted zone route53 pour le domaine choisi (requis pour la génération du certificat ssl). Cette zone doit être la bonne (= que des enregistrements NS pointent dessus). Voir limitations
 
 ## Abstract
 
@@ -24,7 +29,9 @@ Cette application a sensiblement le flow suivant:
 
 - Pour une raison que je n'ai pas réussi à déterminer, Chrome ne semble pas traiter correctement les feuilles de style issues de wordpress et envoyées par nginx. Firefox et Safari (desktop et mobile) les acceptent sans problème.
 - Il aurait été nettement préférable de mettre le cluster et le cluster rds dans deux vpc différents et de créer un point de peering entre les deux. Malheureusement après quelques tentatives infructueuses j'ai préféré mettre cet élément de côté afin de livrer une solution acceptable mais perfectible plutôt que rien.
+- Il est pour le moment nécessaire qu'une hosted zone soit présente dans Route53 pour le domaine demandé **et** que cette zone soit valide (= que des enregistrements NS pointent dessus)
 
 ## Améliorations
 
 - Il aurait été encore plus sexy de générer un nom de domaine automatique à la manière de `now.sh`. Ce ne serait d'ailleurs pas nécessairement beaucoup plus compliqué mais un petit peu hors-scope
+- Le mot de passe pourrait être récupéré via un prompt s'il n'est pas passé en paramètre
