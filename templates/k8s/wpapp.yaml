@@ -1,0 +1,126 @@
+apiVersion: extensions/v1beta1
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: nginx-config
+data:
+  nginx.conf: |
+    events {
+    }
+    http {
+      server {
+        listen 80 default_server;
+        
+        # Set nginx to serve files from the shared volume!
+        root /var/www/html;
+        server_name toto.s.afkt.softwaregardeners.fr;
+        index index.php;
+        location = /favicon.ico {
+                log_not_found off;
+                access_log off;
+        }
+        location = /robots.txt {
+                allow all;
+                log_not_found off;
+                access_log off;
+        }
+        location / {
+          try_files $uri $uri/ =404;
+        }
+        location ~ \.php$ {
+          include fastcgi_params;
+          fastcgi_param REQUEST_METHOD $request_method;
+          fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+          fastcgi_pass 127.0.0.1:9000;
+        }
+        location ~* \.(png|jpg|jpeg|gif|ico)$ {
+                expires max;
+                log_not_found off;
+        }
+        location ~* \.css$ {
+          add_header  Content-Type    text/css;
+        }
+        location ~* \.js$ {
+          add_header  Content-Type    application/x-javascript;
+        }
+      }
+    }
+
+---
+
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    app: wpapp
+  name: wpapp
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: wpapp
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: wpapp
+    spec:
+      volumes:
+        - name: shared-files
+          emptyDir: {}
+        - name: nginx-config-volume
+          configMap:
+            name: nginx-config
+        - name: aurora-db-secret
+          secret:
+            secretName: db-user-pass # dynamiser
+      containers:
+        - image: nginx:1.17.10-alpine
+          imagePullPolicy: Always
+          name: nginx
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+            - name: shared-files
+              mountPath: /var/www/html
+            - name: nginx-config-volume
+              mountPath: /etc/nginx/nginx.conf
+              subPath: nginx.conf
+        - image: wordpress:5.4.1-php7.2-fpm
+          imagePullPolicy: Always
+          name: wordpress
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          env:
+            - name: WORDPRESS_DB_HOST
+              value: mysql-service
+            - name: WORDPRESS_DB_NAME
+              value: wordpressdb
+            - name: WORDPRESS_DB_USER
+              value: dbadmin
+            - name: WORDPRESS_DB_PASSWORD_FILE
+              value: /run/secrets/db-user-pass/password
+          volumeMounts:
+            - name: shared-files
+              mountPath: /var/www/html
+            - name: aurora-db-secret
+              mountPath: /run/secrets/db-user-pass
+              readOnly: true
+          lifecycle:
+            postStart:
+              exec:
+                command: ["/bin/sh", "-c", "cp -r /usr/src/. /var/www/html"]
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+status: {}
