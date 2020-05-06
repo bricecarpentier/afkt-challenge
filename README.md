@@ -46,6 +46,15 @@ Cette application a sensiblement le flow suivant:
 - Il n'y a pas de réel intérêt à faire plusieurs modules terraform différents et cela ralentit assez considérablement l'installation. J'ai initialement opté pour cette solution car j'avais des problèmes d'inter-dépendances dans mes toutes premières versions qui rendaient très compliqué le fait de detruire l'infrastructure. Il aurait sans doute été préférable de passer par des `depends_on`
 - Il serait relativement trivial de plugger soit GithubActions soit CircleCI pour publier automatiquement les nouvelles version à chaque push sur master. Cela étant dit, je n'aime pas particulièrement mettre en place de CD avant d'avoir une CI propre, et donc faire ce publish automatique avant d'avoir une couverture de test décente me parait prématuré.
 
+## Pointeurs
+
+Des fichiers `README.md` sont présents dans certains répertoires
+
+- [templates/k8s](./templates/k8s/README.md)
+- [templates/terraform](./templates/terraform/README.md)
+- [src](./src/README.md)
+- [src/utils/deploy](./src/utils/deploy/README.md)
+
 ## Questions:
 
 > How much did you spend on this test?
