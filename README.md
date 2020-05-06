@@ -55,6 +55,7 @@ On a more serious note, I spent about two full days:
 
 - roughly one day to get the terraform&kubectl process right
 - roughly one day getting the cli in a state that I'm happy with
+- on top of that and because I'm way more used to Docker Swarm than Kubernetes, I've spent an afternoon watching [@jpetazzo's docker training](https://www.youtube.com/watch?v=1X4xbcxKqfE&list=PLBAFXs0YjviJwCoxSUkUPhsSxDJzpZbJd)
 
 The pieces that took me the longest are:
 
